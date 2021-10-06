@@ -15,6 +15,10 @@ namespace ProjetoClinica.Data
         }
 
         public DbSet<MMedico> TBMedico { get; set; }
+
+        public DbSet<MSecretaria> TBSecretaria { get; set; }
+
+        public DbSet<MLogin> TBLogin { get; set; }
     }
 
 }
