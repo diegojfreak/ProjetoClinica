@@ -26,6 +26,11 @@ namespace ProjetoClinica.Controllers
             return View();
         }
 
+        public IActionResult CadastroController()
+        {
+            return View("~/Views/Cadastro/Index.cshtml");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(MLogin login)
