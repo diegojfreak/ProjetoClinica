@@ -27,7 +27,8 @@
         <span asp-validation-for="DataNascimento" class="small text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary" onclick="Salvar()">Salvar</button>
+    <button type="submit" class="btn btn-primary" onclick="Salvar()" id="btnSalvar">Salvar</button>
+
 
 </form>
 
@@ -39,9 +40,44 @@
         event.preventDefault();
         event.stopPropagation();
 
+        var obj = {
+            Nome: document.getElementById('nome').value,
+            CRM: document.getElementById('crm').value,
+            Email: document.getElementById('email').value,
+            DataNascimento: document.getElementById('nascimento').value,
+            CPF: document.getElementById('cpf').value
+        };
+
+        document.getElementById('btnSalvar').setAttribute('disabled', '');
+        document.getElementById('btnSalvar').innerHTML = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>&nbsp;Salvar";
+
+        $.post('/Medico/Salvar', obj, function (result) {
+            if (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sucesso!',
+                    text: 'O Médico foi salvo com sucesso'
+                })
+
+                document.getElementById('btnSalvar').removeAttribute('disabled');
+                document.getElementById('btnSalvar').innerHTML = "Salvar";
+
+            }
+            else { }
+        }).fail(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: error.responseText
+            })
+
+        });
+
+
     }
 </script>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
