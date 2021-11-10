@@ -1,0 +1,109 @@
+﻿@model MPaciente;
+
+<form id="formsalvar" method="post">
+    <div class="form-group">
+        <label asp-for="Nome"></label>
+        <input asp-for="Nome" class="form-control" id="nome" required />
+        <span asp-validation-for="Nome" class="small text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CPF"></label>
+        <input asp-for="CPF" class="form-control" id="cpf" required />
+        <span asp-validation-for="CPF" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DataNascimento"></label>
+        <input asp-for="DataNascimento" class="form-control" id="nascimento" required />
+        <span asp-validation-for="DataNascimento" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Endereco"></label>
+        <input asp-for="Endereco" class="form-control" id="endereco" required />
+        <span asp-validation-for="Endereco" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Telefone"></label>
+        <input asp-for="Telefone" class="form-control" id="telefone" required />
+        <span asp-validation-for="Telefone" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" id="email" required />
+        <span asp-validation-for="Email" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Profissao"></label>
+        <input asp-for="Profissao" class="form-control" id="profissao" required />
+        <span asp-validation-for="Profissao" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sexo"></label>
+        <input asp-for="Sexo" class="form-control" id="sexo" />
+        <span asp-validation-for="Sexo" class="small text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" onclick="Salvar()" id="btnSalvar">Salvar</button>
+
+
+</form>
+
+<script>
+    function Salvar() {
+        if (document.getElementById('formsalvar').checkValidity() == false)
+            return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var obj = {
+            Nome: document.getElementById('nome').value,
+            CPF: document.getElementById('cpf').value,
+            DataNascimento: document.getElementById('nascimento').value,
+            Endereco: document.getElementById('endereco').value,
+            Telefone: document.getElementById('telefone').value,
+            Email: document.getElementById('email').value,
+            Profissao: document.getElementById('profissao').value,
+            Sexo: document.getElementById('sexo')
+        };
+
+        document.getElementById('btnSalvar').setAttribute('disabled', '');
+        document.getElementById('btnSalvar').innerHTML = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>&nbsp;Salvar";
+
+        $.post('/Paciente/Salvar', obj, function (result) {
+            if (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sucesso!',
+                    text: 'O Paciente foi salvo com sucesso'
+                })
+
+                document.getElementById('btnSalvar').removeAttribute('disabled');
+                document.getElementById('btnSalvar').innerHTML = "Salvar";
+
+            }
+            else { }
+        }).fail(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: error.responseText
+            })
+
+        });
+
+
+    }
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
