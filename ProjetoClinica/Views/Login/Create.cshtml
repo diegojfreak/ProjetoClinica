@@ -1,0 +1,64 @@
+﻿@model MLogin;
+
+<form id="formsalvar" method="post">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" id="email" required />
+        <span asp-validation-for="Email" class="small text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Senha"></label>
+        <input asp-for="Senha" class="form-control" id="senha" required />
+        <span asp-validation-for="Senha" class="small text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" onclick="Salvar()" id="btnSalvar">Salvar</button>
+</form>
+
+<script>
+    function Salvar() {
+        if (document.getElementById('formsalvar').checkValidity() == false)
+            return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var obj = {
+            Email: document.getElementById('email').value,
+            Senha: document.getElementById('senha').value
+        };
+
+        document.getElementById('btnSalvar').setAttribute('disabled', '');
+        document.getElementById('btnSalvar').innerHTML = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span>&nbsp;Salvar";
+
+        $.post('/Login/Salvar', obj, function (result) {
+            if (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sucesso!',
+                    text: 'O Usuário foi salvo com sucesso'
+                })
+
+                document.getElementById('btnSalvar').removeAttribute('disabled');
+                document.getElementById('btnSalvar').innerHTML = "Salvar";
+
+            }
+            else { }
+        }).fail(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: error.responseText
+            })
+
+        });
+
+
+    }
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

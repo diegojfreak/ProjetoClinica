@@ -7,17 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjetoClinica.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly DataContext dataContext;
+        private readonly DataContext context;
 
         public LoginController(DataContext dc)
         {
-            dataContext = dc;
+            context = dc;
         }
 
 
@@ -37,11 +39,13 @@ namespace ProjetoClinica.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool fazerLogin = dataContext.TBLogin.Any(x => x.Email == login.Email && x.Senha == login.Senha);
+                Hash hs = new Hash(SHA256.Create());
+                string senhacripto = hs.CriptografarSenha(login.Senha);
+                bool fazerLogin = context.TBLogin.Any(x => x.Email == login.Email && x.Senha == login.Senha);
 
                 if (fazerLogin == true)
                 {
-                    MLogin usuarioBanco = dataContext.TBLogin.FirstOrDefault(x => x.Email == login.Email);
+                    MLogin usuarioBanco = context.TBLogin.FirstOrDefault(x => x.Email == login.Email);
 
                     List<Claim> claims = new List<Claim>
             {
@@ -66,6 +70,71 @@ namespace ProjetoClinica.Controllers
 
             ViewBag.Erro = "Usuário e/ou senha inválidos";
             return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Salvar(MLogin login)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Hash hs = new Hash(SHA256.Create());
+                    login.Senha = hs.CriptografarSenha(login.Senha);
+                    context.TBLogin.Add(login);
+                    await context.SaveChangesAsync();
+
+                    return View();
+                }
+                catch
+                {
+                    return BadRequest("Erro ao salvar o Usuário");
+                }
+            }
+
+            return BadRequest("Dados inválidos");
+        }
+
+        
+    }
+
+    public class Hash
+    {
+        private HashAlgorithm _algoritmo;
+
+        public Hash(HashAlgorithm algoritmo)
+        {
+            _algoritmo = algoritmo;
+        }
+
+        public string CriptografarSenha(string senha)
+        {
+            var encodedValue = Encoding.UTF8.GetBytes(senha);
+            var encryptedPassword = _algoritmo.ComputeHash(encodedValue);
+
+            var sb = new StringBuilder();
+            foreach (var caracter in encryptedPassword)
+            {
+                sb.Append(caracter.ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+
+        public bool VerificarSenha(string senhaDigitada, string senhaCadastrada)
+        {
+            if (string.IsNullOrEmpty(senhaCadastrada))
+                throw new NullReferenceException("Cadastre uma senha.");
+
+            var encryptedPassword = _algoritmo.ComputeHash(Encoding.UTF8.GetBytes(senhaDigitada));
+
+            var sb = new StringBuilder();
+            foreach (var caractere in encryptedPassword)
+            {
+                sb.Append(caractere.ToString("X2"));
+            }
+
+            return sb.ToString() == senhaCadastrada;
         }
     }
 }
