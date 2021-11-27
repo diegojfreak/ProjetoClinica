@@ -1,0 +1,13 @@
+﻿@model ProjetoClinica.Models.MAgenda;
+
+@if (ViewBag.TipoMensagem != null)
+{
+    if (ViewBag.TipoMensagem == "ERRO")
+    {
+        <div class="alert alert-danger">@ViewBag.Mensagem</div>
+    }
+    else if (ViewBag.TipoMensagem == "SUCESSO")
+    {
+        <div class="alert alert-success">@ViewBag.Mensagem</div>
+    }
+}

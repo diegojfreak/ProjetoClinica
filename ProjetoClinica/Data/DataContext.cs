@@ -23,6 +23,10 @@ namespace ProjetoClinica.Data
         public DbSet<MPaciente> TBPaciente { get; set; }
 
         public DbSet<MConsulta> TBConsulta { get; set; }
+
+        public DbSet<MAgenda> TBAgenda { get; set; }
+
+        public DbSet<MAtendimento> TBAtendimento { get; set; }
     }
 
 }

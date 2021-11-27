@@ -33,6 +33,21 @@ namespace ProjetoClinica.Models
 
         public DateTime HoraConsulta { get; set; }
 
+        [Required(ErrorMessage = "Selecione o modo de pagamento")]
+        [DisplayName("Forma de Pagamento")]
+        [DataType(DataType.Text)]
+        public string FormaPagamento { get; set; }
+
+        [DataType(DataType.Text)]
+        [DisplayName("Observações do Consulta")]
+        [MaxLength(1000)]
+        public string Observacoes { get; set; }
+
+        [DataType(DataType.Text)]
+        [DisplayName("Status da Consulta")]
+        [MaxLength(500)]
+        public string StatusConsulta { get; set; }
+
         internal object ToUpper()
         {
             throw new NotImplementedException();
