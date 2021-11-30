@@ -33,6 +33,11 @@ namespace ProjetoClinica.Controllers
             return View("~/Views/Cadastro/Index.cshtml");
         }
 
+        public IActionResult Novo() 
+        {
+            return View("~/Views/Cadastro/Create.cshtml");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(MLogin login)

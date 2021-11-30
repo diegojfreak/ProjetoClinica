@@ -16,7 +16,7 @@ namespace ProjetoClinica.Models
 
         [Required(ErrorMessage = "Campo obrigatório")]
         [DataType(DataType.Password)]
-        [MinLength(4, ErrorMessage = "Utilize ao menos 4 caracteres")]
+        [MinLength(8, ErrorMessage = "Utilize ao menos 8 caracteres")]
         [MaxLength(32, ErrorMessage = "Utilize ao máximo 32 caracteres")]
         public string Senha { get; set; }
 
