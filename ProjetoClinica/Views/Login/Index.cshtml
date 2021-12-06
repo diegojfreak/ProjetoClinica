@@ -40,10 +40,7 @@
 
                 <a class="text-darkyellow" href="#"><small>Esqueceu sua senha?</small></a>
                 <p class="text-whitesmoke text-center"><small>Não tem uma conta?</small></p>
-                @using (Html.BeginForm("", "", FormMethod.Post, new { id = "criar" }))
-                    {
-                        <li><a href="javascript:document.getElementById('criar').submit()">Criar</a></li>
-                    }
+                <a class="btn btn-default" href="/Create.cshtml"><small>Cadastre-se agora!</small></a>
             </form>
             @if (ViewBag.Erro != null)
             {
